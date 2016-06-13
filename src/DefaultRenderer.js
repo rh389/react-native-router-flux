@@ -24,6 +24,7 @@ import NavigationExperimental from 'react-native-experimental-navigation';
 const {
   AnimatedView: NavigationAnimatedView,
   Card: NavigationCard,
+  CardStack
 } = NavigationExperimental;
 
 const {
@@ -112,7 +113,7 @@ export default class DefaultRenderer extends Component {
     if (!navigationState || navigationState.component || navigationState.tabs) {
       return;
     }
-    const scene = navigationState.children[navigationState.index];
+    const scene = navigationState.routes[navigationState.index];
     Actions.focus({ scene });
   }
 
@@ -128,14 +129,15 @@ export default class DefaultRenderer extends Component {
   }
 
   renderCard(/* NavigationSceneRendererProps */ props) {
-    const { key, direction, animation, getSceneStyle } = props.scene.navigationState;
-    let { panHandlers, animationStyle } = props.scene.navigationState;
+    console.log("SCENE:", JSON.stringify(props.scene));
+    const { key, direction, animation, getSceneStyle } = props.scene;
+    let { panHandlers, animationStyle } = props.scene;
 
     const state = props.navigationState;
-    const child = state.children[state.index];
-    let selected = state.children[state.index];
-    while (selected.hasOwnProperty('children')) {
-      selected = selected.children[selected.index];
+    const child = state.routes[state.index];
+    let selected = state.routes[state.index];
+    while (selected.hasOwnProperty('routes')) {
+      selected = selected.routes[selected.index];
     }
     const isActive = child === selected;
     const computedProps = { isActive };
@@ -170,6 +172,7 @@ export default class DefaultRenderer extends Component {
         key={`card_${key}`}
         style={[animationStyle, style]}
         panHandlers={panHandlers}
+        onNavigateBack={props.onNavigate}
         renderScene={this.renderScene}
       />
     );
@@ -178,70 +181,71 @@ export default class DefaultRenderer extends Component {
   renderScene(/* NavigationSceneRendererProps */ props) {
     return (
       <DefaultRenderer
-        key={props.scene.navigationState.key}
-        onNavigate={props.onNavigate}
-        navigationState={props.scene.navigationState}
+        key={props.scene.key}
+        onNavigate={this.props.onNavigate}
+        navigationState={props.scene.route}
       />
     );
   }
 
   renderHeader(/* NavigationSceneRendererProps */ props) {
-    const state = props.navigationState;
-    const child = state.children[state.index];
-    let selected = state.children[state.index];
-    while (selected.hasOwnProperty('children')) {
-      selected = selected.children[selected.index];
-    }
-    if (child !== selected) {
-      // console.log(`SKIPPING renderHeader because ${child.key} !== ${selected.key}`);
-      return null;
-    }
-    const hideNavBar = deepestExplicitValueForKey(state, 'hideNavBar');
-    if (hideNavBar) {
-      // console.log(`SKIPPING renderHeader because ${child.key} hideNavBar === true`);
-      return null;
-    }
-
-    // console.log(`renderHeader for ${child.key}`);
-
-    if (selected.component && selected.component.renderNavigationBar) {
-      return selected.component.renderNavigationBar({ ...props, ...selected });
-    }
-
-    const HeaderComponent = selected.navBar || child.navBar || state.navBar || NavBar;
-    const navBarProps = { ...state, ...child, ...selected };
-
-    if (selected.component && selected.component.onRight) {
-      navBarProps.onRight = selected.component.onRight;
-    }
-
-    if (selected.component && selected.component.onLeft) {
-      navBarProps.onLeft = selected.component.onLeft;
-    }
-
-    if ((navBarProps.leftTitle || navBarProps.leftButtonImage) && navBarProps.onLeft) {
-      delete navBarProps.leftButton;
-    }
-
-    if ((navBarProps.rightTitle || navBarProps.rightButtonImage) && navBarProps.onRight) {
-      delete navBarProps.rightButton;
-    }
-
-    if (navBarProps.rightButton) {
-      delete navBarProps.rightTitle;
-      delete navBarProps.onRight;
-      delete navBarProps.rightButtonImage;
-    }
-
-    if (navBarProps.leftButton) {
-      delete navBarProps.leftTitle;
-      delete navBarProps.onLeft;
-      delete navBarProps.leftButtonImage;
-    }
-    delete navBarProps.style;
-
-    const getTitle = selected.getTitle || (opts => opts.title);
-    return <HeaderComponent {...props} {...navBarProps} getTitle={getTitle} />;
+    return null;
+    //const state = props.scene.route;
+    // const child = state.routes[state.index];
+    // let selected = state.routes[state.index];
+    // while (selected.hasOwnProperty('routes')) {
+    //   selected = selected.routes[selected.index];
+    // }
+    // if (child !== selected) {
+    //   // console.log(`SKIPPING renderHeader because ${child.key} !== ${selected.key}`);
+    //   return null;
+    // }
+    // const hideNavBar = deepestExplicitValueForKey(state, 'hideNavBar');
+    // if (hideNavBar) {
+    //   // console.log(`SKIPPING renderHeader because ${child.key} hideNavBar === true`);
+    //   return null;
+    // }
+    //
+    // // console.log(`renderHeader for ${child.key}`);
+    //
+    // if (selected.component && selected.component.renderNavigationBar) {
+    //   return selected.component.renderNavigationBar({ ...props, ...selected });
+    // }
+    //
+    // const HeaderComponent = selected.navBar || child.navBar || state.navBar || NavBar;
+    // const navBarProps = { ...state, ...child, ...selected };
+    //
+    // if (selected.component && selected.component.onRight) {
+    //   navBarProps.onRight = selected.component.onRight;
+    // }
+    //
+    // if (selected.component && selected.component.onLeft) {
+    //   navBarProps.onLeft = selected.component.onLeft;
+    // }
+    //
+    // if ((navBarProps.leftTitle || navBarProps.leftButtonImage) && navBarProps.onLeft) {
+    //   delete navBarProps.leftButton;
+    // }
+    //
+    // if ((navBarProps.rightTitle || navBarProps.rightButtonImage) && navBarProps.onRight) {
+    //   delete navBarProps.rightButton;
+    // }
+    //
+    // if (navBarProps.rightButton) {
+    //   delete navBarProps.rightTitle;
+    //   delete navBarProps.onRight;
+    //   delete navBarProps.rightButtonImage;
+    // }
+    //
+    // if (navBarProps.leftButton) {
+    //   delete navBarProps.leftTitle;
+    //   delete navBarProps.onLeft;
+    //   delete navBarProps.leftButtonImage;
+    // }
+    // delete navBarProps.style;
+    //
+    // const getTitle = selected.getTitle || (opts => opts.title);
+    // return <HeaderComponent {...props} {...navBarProps} getTitle={getTitle} />;
   }
 
   render() {
@@ -269,7 +273,8 @@ export default class DefaultRenderer extends Component {
     }
 
     const optionals = {};
-    const selected = navigationState.children[navigationState.index];
+
+    const selected = navigationState.routes[navigationState.index];
     const applyAnimation = selected.applyAnimation || navigationState.applyAnimation;
     const style = selected.style || navigationState.style;
 
@@ -291,12 +296,23 @@ export default class DefaultRenderer extends Component {
 
     // console.log(`NavigationAnimatedView for ${navigationState.key}`);
 
+    // return (
+    //   <NavigationAnimatedView
+    //     navigationState={navigationState}
+    //     style={[styles.animatedView, style]}
+    //     renderOverlay={this.renderHeader}
+    //     renderScene={this.renderCard}
+    //     {...optionals}
+    //   />
+    // );
+
     return (
-      <NavigationAnimatedView
+      <CardStack
         navigationState={navigationState}
         style={[styles.animatedView, style]}
         renderOverlay={this.renderHeader}
-        renderScene={this.renderCard}
+        onNavigateBack={this.props.onNavigate}
+        renderScene={this.renderScene}
         {...optionals}
       />
     );
