@@ -10,7 +10,7 @@ import React, {
   Component,
   PropTypes,
 } from 'react';
-import NavigationExperimental from 'react-native-experimental-navigation';
+import NavigationExperimental from 'react-native/Libraries/NavigationExperimental/NavigationExperimental';
 
 import Actions, {POP_ACTION} from './Actions';
 import getInitialState from './State';

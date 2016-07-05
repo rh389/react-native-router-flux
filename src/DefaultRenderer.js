@@ -20,9 +20,8 @@ import TabBar from './TabBar';
 import NavBar from './NavBar';
 import Actions from './Actions';
 import { deepestExplicitValueForKey } from './Util';
-import NavigationExperimental from 'react-native-experimental-navigation';
+import NavigationExperimental from 'react-native/Libraries/NavigationExperimental/NavigationExperimental';
 const {
-  AnimatedView: NavigationAnimatedView,
   Card: NavigationCard,
   CardStack
 } = NavigationExperimental;
@@ -293,18 +292,6 @@ export default class DefaultRenderer extends Component {
         };
       }
     }
-
-    // console.log(`NavigationAnimatedView for ${navigationState.key}`);
-
-    // return (
-    //   <NavigationAnimatedView
-    //     navigationState={navigationState}
-    //     style={[styles.animatedView, style]}
-    //     renderOverlay={this.renderHeader}
-    //     renderScene={this.renderCard}
-    //     {...optionals}
-    //   />
-    // );
 
     return (
       <CardStack
