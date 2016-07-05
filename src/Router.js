@@ -71,6 +71,8 @@ class Router extends Component {
 
     scenesMap.rootProps = parentProps;
 
+    console.log(scenesMap);
+
     const navigationState = props.navigationState || getInitialState(scenesMap);
 
     if (!props.navigationState) {

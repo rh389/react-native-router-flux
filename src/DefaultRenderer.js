@@ -189,63 +189,63 @@ export default class DefaultRenderer extends Component {
   }
 
   renderHeader(/* NavigationSceneRendererProps */ props) {
-    return null;
-    //const state = props.scene.route;
-    // const child = state.routes[state.index];
-    // let selected = state.routes[state.index];
-    // while (selected.hasOwnProperty('routes')) {
-    //   selected = selected.routes[selected.index];
-    // }
-    // if (child !== selected) {
-    //   // console.log(`SKIPPING renderHeader because ${child.key} !== ${selected.key}`);
-    //   return null;
-    // }
-    // const hideNavBar = deepestExplicitValueForKey(state, 'hideNavBar');
-    // if (hideNavBar) {
-    //   // console.log(`SKIPPING renderHeader because ${child.key} hideNavBar === true`);
-    //   return null;
-    // }
-    //
-    // // console.log(`renderHeader for ${child.key}`);
-    //
-    // if (selected.component && selected.component.renderNavigationBar) {
-    //   return selected.component.renderNavigationBar({ ...props, ...selected });
-    // }
-    //
-    // const HeaderComponent = selected.navBar || child.navBar || state.navBar || NavBar;
-    // const navBarProps = { ...state, ...child, ...selected };
-    //
-    // if (selected.component && selected.component.onRight) {
-    //   navBarProps.onRight = selected.component.onRight;
-    // }
-    //
-    // if (selected.component && selected.component.onLeft) {
-    //   navBarProps.onLeft = selected.component.onLeft;
-    // }
-    //
-    // if ((navBarProps.leftTitle || navBarProps.leftButtonImage) && navBarProps.onLeft) {
-    //   delete navBarProps.leftButton;
-    // }
-    //
-    // if ((navBarProps.rightTitle || navBarProps.rightButtonImage) && navBarProps.onRight) {
-    //   delete navBarProps.rightButton;
-    // }
-    //
-    // if (navBarProps.rightButton) {
-    //   delete navBarProps.rightTitle;
-    //   delete navBarProps.onRight;
-    //   delete navBarProps.rightButtonImage;
-    // }
-    //
-    // if (navBarProps.leftButton) {
-    //   delete navBarProps.leftTitle;
-    //   delete navBarProps.onLeft;
-    //   delete navBarProps.leftButtonImage;
-    // }
-    // delete navBarProps.style;
-    //
-    // const getTitle = selected.getTitle || (opts => opts.title);
-    // return <HeaderComponent {...props} {...navBarProps} getTitle={getTitle} />;
+    console.log(props);
+    const state = props.navigationState;
+    const child = state.routes[state.index];
+    let selected = state.routes[state.index];
+    while (selected.hasOwnProperty('routes')) {
+      selected = selected.routes[selected.index];
+    }
+    if (child !== selected) {
+      // console.log(`SKIPPING renderHeader because ${child.key} !== ${selected.key}`);
+      return null;
+    }
+    const hideNavBar = deepestExplicitValueForKey(state, 'hideNavBar');
+    if (hideNavBar) {
+      // console.log(`SKIPPING renderHeader because ${child.key} hideNavBar === true`);
+      return null;
+    }
+
+    // console.log(`renderHeader for ${child.key}`);
+
+    if (selected.component && selected.component.renderNavigationBar) {
+      return selected.component.renderNavigationBar({ ...props, ...selected });
+    }
+
+    const HeaderComponent = selected.navBar || child.navBar || state.navBar || NavBar;
+    const navBarProps = { ...state, ...child, ...selected };
+
+    if (selected.component && selected.component.onRight) {
+      navBarProps.onRight = selected.component.onRight;
+    }
+
+    if (selected.component && selected.component.onLeft) {
+      navBarProps.onLeft = selected.component.onLeft;
+    }
+
+    if ((navBarProps.leftTitle || navBarProps.leftButtonImage) && navBarProps.onLeft) {
+      delete navBarProps.leftButton;
+    }
+
+    if ((navBarProps.rightTitle || navBarProps.rightButtonImage) && navBarProps.onRight) {
+      delete navBarProps.rightButton;
+    }
+
+    if (navBarProps.rightButton) {
+      delete navBarProps.rightTitle;
+      delete navBarProps.onRight;
+      delete navBarProps.rightButtonImage;
+    }
+
+    if (navBarProps.leftButton) {
+      delete navBarProps.leftTitle;
+      delete navBarProps.onLeft;
+      delete navBarProps.leftButtonImage;
+    }
+    delete navBarProps.style;
+
+    const getTitle = selected.getTitle || (opts => opts.title);
+    return <HeaderComponent {...props} {...navBarProps} getTitle={getTitle} />;
   }
 
   render() {
