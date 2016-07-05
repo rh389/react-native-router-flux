@@ -63,6 +63,6 @@
     "sinon": "^1.17.3"
   },
   "peerDependencies": {
-    "react-native": "~0.29.0-rc"
+    "react-native": "~0.29.0-rc || 1000.0.0"
   }
 }
